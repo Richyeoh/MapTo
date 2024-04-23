@@ -1,4 +1,4 @@
-package com.copite.mapto
+package com.copite.kotlin.extensions
 
 import kotlin.reflect.full.*
 

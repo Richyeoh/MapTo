@@ -1,24 +1,28 @@
 package com.copite.mapto
 
-import kotlin.reflect.full.createInstance
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.*
 
 inline fun <reified T : Any, reified R : Any> T.mapTo(): R {
-    val values = T::class.declaredMemberProperties
-        .associate { props ->
-            Pair(props.name, props.get(this))
+    val source = T::class
+        .declaredMemberProperties
+        .filter { prop ->
+            prop.get(this) != null
+        }
+        .associate { prop ->
+            Pair(prop.name, prop.get(this))
         }
     val primary = R::class.primaryConstructor
-    val instance = if (primary != null) {
+    val target = if (primary != null) {
         val params = primary.parameters
-            .associateWith {
-                val name = it.name
-                values[name]
+            .filter { param ->
+                source.containsKey(param.name)
+            }
+            .associateWith { param ->
+                source[param.name]
             }
         primary.callBy(params)
     } else {
-        R::class.createInstance()
+        R::class.primaryConstructor!!.callBy(emptyMap())
     }
-    return instance
+    return target
 }

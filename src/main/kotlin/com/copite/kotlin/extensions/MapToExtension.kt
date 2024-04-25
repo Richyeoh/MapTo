@@ -1,28 +1,38 @@
 package com.copite.kotlin.extensions
 
-import kotlin.reflect.full.*
+import kotlin.reflect.KProperty1
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.primaryConstructor
 
+// 少对多：缺失的需要实现默认参数
+// 多对少：跳过无用的字段
 inline fun <reified T : Any, reified R : Any> T.mapTo(): R {
-    val source = T::class
-        .declaredMemberProperties
-        .filter { prop ->
-            prop.get(this) != null
-        }
-        .associate { prop ->
-            Pair(prop.name, prop.get(this))
-        }
-    val primary = R::class.primaryConstructor
-    val target = if (primary != null) {
-        val params = primary.parameters
-            .filter { param ->
-                source.containsKey(param.name)
-            }
-            .associateWith { param ->
-                source[param.name]
-            }
-        primary.callBy(params)
-    } else {
-        R::class.primaryConstructor!!.callBy(emptyMap())
+    val sourceInstance = this
+    val sourceProperties = T::class.declaredMemberProperties
+    val sourceMapper = sourceProperties.associate {
+        Pair(it.name, it.get(sourceInstance))
     }
-    return target
+    val construct = R::class.primaryConstructor
+    val targetInstance = construct?.callBy(emptyMap()) ?: R::class.java.newInstance()
+    val targetProperties = R::class.declaredMemberProperties
+    targetProperties.forEach { prop ->
+        val value = getPropertyValue(targetInstance, prop, sourceMapper[prop.name])
+        setPropertyValue(targetInstance, prop, value)
+    }
+    return targetInstance
+}
+
+fun getPropertyValue(instance: Any, property: KProperty1<*, *>, value: Any?): Any? {
+    if (value == null) {
+        val field = instance.javaClass.getDeclaredField(property.name)
+        field.isAccessible = true
+        return field.get(instance)
+    }
+    return value
+}
+
+fun setPropertyValue(instance: Any, property: KProperty1<*, *>, value: Any?) {
+    val field = instance.javaClass.getDeclaredField(property.name)
+    field.isAccessible = true
+    field.set(instance, value)
 }

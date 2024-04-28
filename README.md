@@ -5,6 +5,7 @@
 ## Todo List
 - [ ] Support annotation mark
 - [ ] Support alias fields mapping
+- [x] Support different type mapping
 
 ## Examples
 

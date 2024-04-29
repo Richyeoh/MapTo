@@ -1,9 +1,11 @@
 package com.copite.kotlin.m2.convert
 
 import com.copite.kotlin.m2.convert.defaults.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 object DefaultConverters {
-    private val converters = mapOf(
+    private val javaConverters = mapOf(
         Pair(Boolean::class.java, String::class.java) to BooleanToStringConverter(),
         Pair(String::class.java, Boolean::class.java) to StringToBooleanConverter(),
         Pair(Byte::class.java, String::class.java) to ByteToStringConverter(),
@@ -23,6 +25,6 @@ object DefaultConverters {
     )
 
     operator fun get(pair: Pair<Class<*>, Class<*>>): Converter? {
-        return converters[pair]
+        return javaConverters[pair]
     }
 }

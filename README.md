@@ -4,7 +4,7 @@
 
 ## Todo List
 
-- [ ] Use kotlin reflect
+- [x] Use kotlin reflect
 - [ ] Support annotation mark
 - [ ] Support alias fields mapping
 - [x] Support different type mapping

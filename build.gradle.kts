@@ -3,8 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.9.0"
     kotlin("plugin.noarg") version "1.9.10"
-
-    id("maven-publish")
 }
 
 group = "com.copite.mapto"
@@ -25,24 +23,6 @@ dependencies {
 
 noArg {
     annotations("com.copite.kotlin.m2.annotations.NoArgs")
-}
-
-publishing {
-    publications {
-        register("mavenJava", MavenPublication::class) {
-            from(components["java"])
-        }
-    }
-
-    repositories {
-        maven {
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = project.findProperty("OssUsername").toString()
-                password = project.findProperty("OssPassword").toString()
-            }
-        }
-    }
 }
 
 tasks.test {

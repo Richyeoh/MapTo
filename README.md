@@ -3,9 +3,10 @@
 `MapTo is a kotlin tools, Convert a class to another class`
 
 ## Todo List
+
+- [ ] Use kotlin reflect
 - [ ] Support annotation mark
 - [ ] Support alias fields mapping
-- [ ] Use kotlin reflect
 - [x] Support different type mapping
 
 ## Examples

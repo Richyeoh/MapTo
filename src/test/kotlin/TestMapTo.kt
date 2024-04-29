@@ -1,11 +1,22 @@
 import com.copite.kotlin.m2.annotations.NoArgs
 import com.copite.kotlin.m2.mapTo
+import java.time.LocalDateTime
 
 @NoArgs
-data class Source(val name: String, val age: Int, val properties: Map<String, String>? = null)
+data class Source(
+    val name: String,
+    val age: Int,
+    val properties: Map<String, String>? = null,
+    val createdAt: LocalDateTime? = null
+)
 
 @NoArgs
-data class Target(val name: String, val age: String, val properties: String? = null)
+data class Target(
+    val name: String,
+    val age: String,
+    val properties: String? = null,
+    val createdAt: LocalDateTime = LocalDateTime.now()
+)
 
 fun main() {
     testJavaConvert()

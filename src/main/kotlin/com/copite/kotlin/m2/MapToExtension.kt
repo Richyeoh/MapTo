@@ -21,8 +21,15 @@ inline fun <reified T : Any, reified R : Any> T.mapTo(targetClazz: KClass<R>): R
         val sourceProperty = sourceProperties.find { it.name == targetParameter.name }
         if (sourceProperty != null) {
             val value = sourceProperty.call(source)
-            if (targetParameter.type == sourceProperty.returnType) {
-                primaryMap[targetParameter] = value
+            // FIXME: If use type or returnType, Exist Kotlin type is nullable
+            if (targetParameter.type.classifier == sourceProperty.returnType.classifier) {
+                if (value != null) {
+                    primaryMap[targetParameter] = value
+                } else {
+                    if (!targetParameter.isOptional && targetParameter.type.isMarkedNullable) {
+                        primaryMap[targetParameter] = null
+                    }
+                }
             } else {
                 // 1. Handle same name but different types (Use converter
                 val sourceJClazz = (sourceProperty.returnType.classifier as KClass<*>).java

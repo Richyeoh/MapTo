@@ -5,6 +5,7 @@
 ## Todo List
 - [ ] Support annotation mark
 - [ ] Support alias fields mapping
+- [ ] Use kotlin reflect
 - [x] Support different type mapping
 
 ## Examples

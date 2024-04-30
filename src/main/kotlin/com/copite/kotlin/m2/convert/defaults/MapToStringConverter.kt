@@ -7,6 +7,7 @@ class MapToStringConverter : Converter {
     private val gson = Gson()
 
     override fun convert(value: Any?): Any? {
+        if (value == null) return null
         return gson.toJson(value as Map<*, *>)
     }
 }
